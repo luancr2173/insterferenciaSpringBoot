@@ -1,9 +1,9 @@
 package interferencia_hidrica.repository;
 
-import interferencia_hidrica.entity.Interferencia;
+import interferencia_hidrica.entity.Demanda;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface InterferenciaRepository extends JpaRepository<Interferencia, Long> {
+public interface DemandaRepository extends JpaRepository<Demanda, Long> {
 }

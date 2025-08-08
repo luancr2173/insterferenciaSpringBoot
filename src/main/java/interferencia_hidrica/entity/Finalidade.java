@@ -5,9 +5,11 @@ import java.util.List;
 
 @Entity
 public class Finalidade {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private Long id; 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String nome;
 
     @ManyToOne
@@ -17,6 +19,7 @@ public class Finalidade {
     @OneToMany(mappedBy = "finalidade", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Demanda> demandas;
 
+    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -40,5 +43,12 @@ public class Finalidade {
     public void setInterferencia(Interferencia interferencia) {
         this.interferencia = interferencia;
     }
-    
+
+    public List<Demanda> getDemandas() {
+        return demandas;
+    }
+
+    public void setDemandas(List<Demanda> demandas) {
+        this.demandas = demandas;
+    }
 }

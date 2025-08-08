@@ -26,9 +26,10 @@ public class InterferenciaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Interferencia> buscar(@PathVariable Long id) {
-        Interferencia i = service.buscarPorId(id);
-        return (i != null) ? ResponseEntity.ok(i) : ResponseEntity.notFound().build();
+    public ResponseEntity<Interferencia> buscarPorId(@PathVariable Long id) {
+        return service.buscarPorId(id)
+                     .map(ResponseEntity::ok)
+                     .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

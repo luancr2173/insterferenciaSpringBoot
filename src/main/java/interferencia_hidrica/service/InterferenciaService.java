@@ -6,26 +6,27 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class InterferenciaService {
 
-    private final InterferenciaRepository repo;
+    private final InterferenciaRepository repository;
 
     public Interferencia salvar(Interferencia interferencia) {
-        return repo.save(interferencia);
+        return repository.save(interferencia);
     }
 
     public List<Interferencia> listar() {
-        return repo.findAll();
+        return repository.findAll();
+    }
+
+    public Optional<Interferencia> buscarPorId(Long id) {
+        return repository.findById(id);
     }
 
     public void deletar(Long id) {
-        repo.deleteById(id);
-    }
-
-    public Interferencia buscarPorId(Long id) {
-        return repo.findById(id).orElse(null);
+        repository.deleteById(id);
     }
 }

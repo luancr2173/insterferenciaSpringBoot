@@ -5,7 +5,9 @@ import java.math.BigDecimal;
 
 @Entity
 public class Demanda {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;
@@ -17,11 +19,11 @@ public class Demanda {
     private Finalidade finalidade;
 
     // Getters e Setters
-    public Long getId (){
+    public Long getId() {
         return id;
-    } 
+    }
 
-    public void setId(Long id){
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -29,11 +31,11 @@ public class Demanda {
         return nome;
     }
 
-    public void setNome(String nome){
+    public void setNome(String nome) {
         this.nome = nome;
     }
 
-    public BigDecimal getVazaoMensal(){
+    public BigDecimal getVazaoMensal() {
         return vazaoMensal;
     }
 
@@ -41,4 +43,11 @@ public class Demanda {
         this.vazaoMensal = vazaoMensal;
     }
 
+    public Finalidade getFinalidade() {
+        return finalidade;
+    }
+
+    public void setFinalidade(Finalidade finalidade) {
+        this.finalidade = finalidade;
+    }
 }
