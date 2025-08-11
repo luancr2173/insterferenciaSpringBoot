@@ -1,5 +1,7 @@
 package interferencia_hidrica.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -14,9 +16,11 @@ public class Finalidade {
 
     @ManyToOne
     @JoinColumn(name = "interferencia_id")
+    @JsonBackReference // evita loop no JSON
     private Interferencia interferencia;
 
     @OneToMany(mappedBy = "finalidade", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // lado "gerenciador" da relação
     private List<Demanda> demandas;
 
     // Getters e Setters
