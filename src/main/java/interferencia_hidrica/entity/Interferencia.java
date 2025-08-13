@@ -1,5 +1,6 @@
 package interferencia_hidrica.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -15,46 +16,22 @@ public class Interferencia {
     private Double longitude;
 
     @OneToMany(mappedBy = "interferencia", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Finalidade> finalidades;
 
     // Getters e Setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 
-    public String getDescricao() {
-        return descricao;
-    }
+    public Double getLatitude() { return latitude; }
+    public void setLatitude(Double latitude) { this.latitude = latitude; }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+    public Double getLongitude() { return longitude; }
+    public void setLongitude(Double longitude) { this.longitude = longitude; }
 
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
-    public List<Finalidade> getFinalidades() {
-        return finalidades;
-    }
-
-    public void setFinalidades(List<Finalidade> finalidades) {
-        this.finalidades = finalidades;
-    }
+    public List<Finalidade> getFinalidades() { return finalidades; }
+    public void setFinalidades(List<Finalidade> finalidades) { this.finalidades = finalidades; }
 }
