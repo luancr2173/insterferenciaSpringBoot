@@ -32,6 +32,17 @@ public class FinalidadeController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Finalidade> atualizar(@PathVariable Long id, @RequestBody Finalidade finalidadeAtualizada) {
+        return repository.findById(id)
+                .map(finalidade -> {
+                    finalidade.setNome(finalidadeAtualizada.getNome());
+                    // adicione aqui outros campos se a entidade tiver mais atributos
+                    return ResponseEntity.ok(repository.save(finalidade));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         repository.deleteById(id);
