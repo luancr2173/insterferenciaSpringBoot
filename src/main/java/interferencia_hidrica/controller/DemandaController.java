@@ -32,6 +32,18 @@ public class DemandaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Demanda> atualizar(@PathVariable Long id, @RequestBody Demanda demandaAtualizada) {
+        return repository.findById(id)
+                .map(demanda -> {
+                    demanda.setNome(demandaAtualizada.getNome());
+                    demanda.setVazaoMensal(demandaAtualizada.getVazaoMensal());
+                    demanda.setFinalidade(demandaAtualizada.getFinalidade());
+                    return ResponseEntity.ok(repository.save(demanda));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         repository.deleteById(id);
