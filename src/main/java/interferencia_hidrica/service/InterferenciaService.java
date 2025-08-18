@@ -1,7 +1,6 @@
 package interferencia_hidrica.service;
 
 import interferencia_hidrica.entity.Interferencia;
-import interferencia_hidrica.entity.Finalidade;
 import interferencia_hidrica.repository.InterferenciaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,11 +15,9 @@ public class InterferenciaService {
     private final InterferenciaRepository repository;
 
     public Interferencia salvar(Interferencia interferencia) {
-        // Amarra as finalidades à interferência antes de salvar
+        // garante que as finalidades apontem para a interferência
         if (interferencia.getFinalidades() != null) {
-            for (Finalidade finalidade : interferencia.getFinalidades()) {
-                finalidade.setInterferencia(interferencia);
-            }
+            interferencia.getFinalidades().forEach(f -> f.setInterferencia(interferencia));
         }
         return repository.save(interferencia);
     }
@@ -34,6 +31,14 @@ public class InterferenciaService {
     }
 
     public void deletar(Long id) {
-        repository.deleteById(id);
+        Interferencia interferencia = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Interferência não encontrada"));
+
+        // Limpa a lista de finalidades para garantir exclusão
+        if (interferencia.getFinalidades() != null) {
+            interferencia.getFinalidades().clear();
+        }
+
+        repository.delete(interferencia);
     }
 }

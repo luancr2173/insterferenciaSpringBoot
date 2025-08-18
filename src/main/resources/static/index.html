@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestão de Interferências</title>
+    <link rel="stylesheet" href="style.css"> <!-- caso queira CSS externo -->
+</head>
+<body>
+
+<h1>Gestão de Interferências</h1>
+
+<!-- Formulário de cadastro/edição -->
+<form id="formInterferencia">
+
+    <h2>Interferência</h2>
+    <input type="hidden" id="id">
+    <input type="text" id="descricao" placeholder="Descrição da interferência" required>
+    <input type="number" step="any" id="latitude" placeholder="Latitude" required>
+    <input type="number" step="any" id="longitude" placeholder="Longitude" required>
+
+    <h3>Finalidades</h3>
+    <div id="finalidadesContainer"></div>
+    <button type="button" onclick="adicionarFinalidade()">+ Adicionar Finalidade</button>
+
+    <br><br>
+    <button type="submit">Salvar</button>
+    <button type="button" onclick="cancelarEdicao()">Cancelar</button>
+</form>
+
+<!-- Tabela de listagem -->
+<table id="tabelaInterferencias">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Descrição da Interferência</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Finalidade</th>
+            <th>Vazão Mensal (m³)</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+function adicionarFinalidade(nome = "", vazaoMensal = "") {
+    const container = document.getElementById("finalidadesContainer");
+    const div = document.createElement("div");
+    div.classList.add("finalidade-item");
+    div.innerHTML = `
+        <input type="text" placeholder="descrição" value="${nome}" required>
+        <input type="number" step="any" placeholder="Vazão mensal (m³)" value="${vazaoMensal}" required>
+        <button type="button" onclick="this.parentElement.remove()">X</button>
+    `;
+    container.appendChild(div);
+}
+
+async function carregarInterferencias() {
+    const resposta = await fetch('/interferencias');
+    const dados = await resposta.json();
+
+    const tbody = document.querySelector("#tabelaInterferencias tbody");
+    tbody.innerHTML = '';
+
+    dados.forEach(item => {
+        if (item.finalidades && item.finalidades.length > 0) {
+            item.finalidades.forEach(f => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${item.id}</td>
+                    <td>${item.descricao}</td>
+                    <td>${item.latitude}</td>
+                    <td>${item.longitude}</td>
+                    <td>${f.nome || "(sem nome)"}</td>
+                    <td>${f.vazaoMensal || 0}</td>
+                    <td>
+                        <button onclick="editarInterferencia(${item.id})">Editar</button>
+                        <button onclick="excluirInterferencia(${item.id})">Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } else {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${item.id}</td>
+                <td>${item.descricao}</td>
+                <td>${item.latitude}</td>
+                <td>${item.longitude}</td>
+                <td>(nenhuma)</td>
+                <td>0</td>
+                <td>
+                    <button onclick="editarInterferencia(${item.id})">Editar</button>
+                    <button onclick="excluirInterferencia(${item.id})">Excluir</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        }
+    });
+}
+
+document.getElementById("formInterferencia").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = document.getElementById("id").value;
+    const descricao = document.getElementById("descricao").value;
+    const latitude = parseFloat(document.getElementById("latitude").value);
+    const longitude = parseFloat(document.getElementById("longitude").value);
+
+    const finalidades = Array.from(document.querySelectorAll("#finalidadesContainer .finalidade-item"))
+        .map(div => {
+            const inputs = div.querySelectorAll("input");
+            return { nome: inputs[0].value, vazaoMensal: parseFloat(inputs[1].value) };
+        });
+
+    const metodo = id ? 'PUT' : 'POST';
+    const url = id ? `/interferencias/${id}` : '/interferencias';
+
+    await fetch(url, {
+        method: metodo,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ descricao, latitude, longitude, finalidades })
+    });
+
+    cancelarEdicao();
+    carregarInterferencias();
+});
+
+async function editarInterferencia(id) {
+    const resposta = await fetch(`/interferencias/${id}`);
+    const dados = await resposta.json();
+
+    document.getElementById("id").value = dados.id;
+    document.getElementById("descricao").value = dados.descricao;
+    document.getElementById("latitude").value = dados.latitude;
+    document.getElementById("longitude").value = dados.longitude;
+
+    const container = document.getElementById("finalidadesContainer");
+    container.innerHTML = "";
+    if (dados.finalidades) {
+        dados.finalidades.forEach(f => adicionarFinalidade(f.nome, f.vazaoMensal));
+    }
+}
+
+async function excluirInterferencia(id) {
+    if (confirm("Tem certeza que deseja excluir esta interferência?")) {
+        await fetch(`/interferencias/${id}`, { method: 'DELETE' });
+        carregarInterferencias();
+    }
+}
+
+function cancelarEdicao() {
+    document.getElementById("id").value = '';
+    document.getElementById("formInterferencia").reset();
+    document.getElementById("finalidadesContainer").innerHTML = "";
+}
+
+carregarInterferencias();
+</script>
+
+</body>
+</html>

@@ -44,12 +44,15 @@ public class InterferenciaController {
                     if (interferencia.getFinalidades() != null) {
                         existingInterferencia.getFinalidades().clear();
                         existingInterferencia.getFinalidades().addAll(interferencia.getFinalidades());
+                        // garante que cada finalidade aponte para a interferência
+                        existingInterferencia.getFinalidades()
+                                .forEach(f -> f.setInterferencia(existingInterferencia));
                     }
 
                     Interferencia atualizado = service.salvar(existingInterferencia);
                     return ResponseEntity.ok(atualizado);
                 })
-            .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

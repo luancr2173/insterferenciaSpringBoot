@@ -37,7 +37,7 @@ public class FinalidadeController {
         return repository.findById(id)
                 .map(finalidade -> {
                     finalidade.setNome(finalidadeAtualizada.getNome());
-                    // adicione aqui outros campos se a entidade tiver mais atributos
+                    finalidade.setVazaoMensal(finalidadeAtualizada.getVazaoMensal());
                     return ResponseEntity.ok(repository.save(finalidade));
                 })
                 .orElse(ResponseEntity.notFound().build());

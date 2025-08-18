@@ -12,6 +12,8 @@ public class Finalidade {
 
     private String nome;
 
+    private Double vazaoMensal; // vazão mensal da finalidade
+
     @ManyToOne
     @JoinColumn(name = "interferencia_id")
     @JsonBackReference
@@ -23,6 +25,9 @@ public class Finalidade {
 
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
+
+    public Double getVazaoMensal() { return vazaoMensal; }
+    public void setVazaoMensal(Double vazaoMensal) { this.vazaoMensal = vazaoMensal; }
 
     public Interferencia getInterferencia() { return interferencia; }
     public void setInterferencia(Interferencia interferencia) { this.interferencia = interferencia; }
