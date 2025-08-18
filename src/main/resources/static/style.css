@@ -1,17 +1,29 @@
+*{
+  color: white;
+}
+
 body {
   font-family: Arial, sans-serif;
-  margin: 20px;
+  margin: 0;
   background-color: black;
+}
+
+#formInterferencia{
+  border-radius: 10px;
+  text-align: center;
 }
 
 h1 {
   text-align: center;
+  color: white;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  color: white;
+  background-color: #000f3c;
 }
 
 table,
@@ -28,6 +40,7 @@ td {
 
 th {
   background-color: #f4f4f4;
+  color: black;
 }
 
 form {
@@ -41,15 +54,32 @@ input,
 button {
   padding: 8px;
   margin: 5px;
+  color: black;
+  border-radius: 20px;
+  border: none;
+  outline:none;
 }
 
 button {
   cursor: pointer;
+  font-size: 10px;
+  font-weight: 600;
 }
 
-.finalidade-item {
-  display: flex;
-  gap: 5px;
-  margin-bottom: 5px;
+#btnSalvar{
+  background-color: green;
+  color: white;
+  font-weight: 600;
+}
+
+#btnCancel{
+  background-color: red;
+  color: white;
+  font-weight: 600; 
+}
+
+::placeholder{
+  font-size: 10px;
+  text-transform: uppercase;
 }
 
