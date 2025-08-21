@@ -1,252 +1,69 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Gestão de Interferências</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Scripts do app -->
+  <script type="module" src="./script.js" defer></script>
+  <script src="./map.js" defer></script>
+  <!-- Google Maps: substitua YOUR_GOOGLE_MAPS_API_KEY -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key="></script>
+</head>
+
+<body>
+  <!-- Botão de modo claro/escuro -->
   <label class="switch">
     <input type="checkbox" id="toggleMode" />
     <span class="slider"></span>
   </label>
 
-  <head>
-    <meta charset="UTF-8" />
-    <title>Gestão de Interferências</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <h1>Gestão de Interferências</h1>
+  <h1>Gestão de Interferências</h1>
 
-    <!-- Formulário de cadastro/edição -->
+  <div id="container">
+    <!-- Mapa -->
+    <div id="map"></div>
+
+    <!-- Formulário -->
     <form id="formInterferencia">
-      <h2>Interferência</h2>
+      <h2>Nova Interferência</h2>
       <input type="hidden" id="id" />
-      <input
-        type="text"
-        id="descricao"
-        placeholder="Descrição da interferência"
-        required
-      />
-      <input
-        type="number"
-        step="any"
-        id="latitude"
-        placeholder="Latitude"
-        required
-      />
-      <input
-        type="number"
-        step="any"
-        id="longitude"
-        placeholder="Longitude"
-        required
-      />
+      <input type="text" id="descricao" placeholder="Descrição da interferência" required />
+      <input type="number" step="any" id="latitude" placeholder="Latitude" required />
+      <input type="number" step="any" id="longitude" placeholder="Longitude" required />
 
       <h3>Finalidades</h3>
       <div id="finalidadesContainer"></div>
-      <button type="button" onclick="adicionarFinalidade()">
-        Adicionar Finalidade
-      </button>
+      <button type="button" id="btnAddFinalidade">Adicionar Finalidade</button>
 
       <br /><br />
       <button type="submit" id="btnSalvar">Salvar</button>
-      <button type="button" id="btnCancel" onclick="cancelarEdicao()">
-        Cancelar
-      </button>
+      <button type="button" id="btnCancel">Cancelar</button>
     </form>
+  </div>
 
-    <!-- Campo de busca -->
-    <input
-      type="text"
-      id="campoBusca"
-      placeholder="Buscar por descrição ou finalidade..."
-    />
+  <!-- Campo de busca -->
+  <div id="containerBusca">
+    <input type="text" id="campoBusca" placeholder="Buscar por descrição ou finalidade..." />
     <button id="btnLimparBusca">Limpar</button>
+  </div>
 
-    <!-- Tabela de listagem -->
-    <table id="tabelaInterferencias">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Descrição da Interferência</th>
-          <th>Latitude</th>
-          <th>Longitude</th>
-          <th>Finalidade</th>
-          <th>Vazão Mensal (m³)</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+  <!-- Tabela -->
+  <table id="tabelaInterferencias">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Descrição</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>Finalidade(s)</th>
+        <th>Vazão Total (m³)</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</body>
 
-    <script>
-      function adicionarFinalidade(nome = "", vazaoMensal = "") {
-        const container = document.getElementById("finalidadesContainer");
-        const div = document.createElement("div");
-        div.classList.add("finalidade-item");
-        div.innerHTML = `
-        <input style="width: 40%;" type="text" placeholder="descrição" value="${nome}" required>
-        <input style="width: 30%;" type="number" step="any" placeholder="Vazão mensal (m³)" value="${vazaoMensal}" required>
-        <button type="button" onclick="this.parentElement.remove()">X</button>
-    `;
-        container.appendChild(div);
-      }
-
-      let interferenciasCache = []; // salvar os dados carregados
-
-      async function carregarInterferencias() {
-        const resposta = await fetch("/interferencias");
-        const dados = await resposta.json();
-        interferenciasCache = dados; // cache para busca
-        renderizarTabela(dados);
-      }
-
-      function renderizarTabela(lista) {
-        const tbody = document.querySelector("#tabelaInterferencias tbody");
-        tbody.innerHTML = "";
-
-        lista.forEach((item) => {
-          if (item.finalidades && item.finalidades.length > 0) {
-            item.finalidades.forEach((f) => {
-              const tr = document.createElement("tr");
-              tr.innerHTML = `
-                    <td>${item.id}</td>
-                    <td>${item.descricao}</td>
-                    <td>${item.latitude}</td>
-                    <td>${item.longitude}</td>
-                    <td>${f.nome || "(sem nome)"}</td>
-                    <td>${f.vazaoMensal || 0}</td>
-                    <td>
-                        <button onclick="editarInterferencia(${
-                          item.id
-                        })">Editar</button>
-                        <button id="btn-excluir" onclick="excluirInterferencia(${
-                          item.id
-                        })">🗑️</button>
-                    </td>
-                `;
-              tbody.appendChild(tr);
-            });
-          } else {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${item.id}</td>
-                <td>${item.descricao}</td>
-                <td>${item.latitude}</td>
-                <td>${item.longitude}</td>
-                <td>(nenhuma)</td>
-                <td>0</td>
-                <td>
-                    <button onclick="editarInterferencia(${item.id})">Editar</button>
-                    <button onclick="excluirInterferencia(${item.id})">Excluir</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-          }
-        });
-      }
-
-      // Função de busca
-      document
-        .getElementById("campoBusca")
-        .addEventListener("input", function () {
-          filtrarTabela(this.value);
-        });
-
-      document
-        .getElementById("btnLimparBusca")
-        .addEventListener("click", function () {
-          document.getElementById("campoBusca").value = "";
-          renderizarTabela(interferenciasCache);
-        });
-
-      function filtrarTabela(termo) {
-        termo = termo.toLowerCase();
-        const filtrados = interferenciasCache.filter(
-          (item) =>
-            item.descricao.toLowerCase().includes(termo) ||
-            (item.finalidades &&
-              item.finalidades.some((f) =>
-                f.nome.toLowerCase().includes(termo)
-              ))
-        );
-        renderizarTabela(filtrados);
-      }
-
-      document
-        .getElementById("formInterferencia")
-        .addEventListener("submit", async (e) => {
-          e.preventDefault();
-          const id = document.getElementById("id").value;
-          const descricao = document.getElementById("descricao").value;
-          const latitude = parseFloat(
-            document.getElementById("latitude").value
-          );
-          const longitude = parseFloat(
-            document.getElementById("longitude").value
-          );
-
-          const finalidades = Array.from(
-            document.querySelectorAll("#finalidadesContainer .finalidade-item")
-          ).map((div) => {
-            const inputs = div.querySelectorAll("input");
-            return {
-              nome: inputs[0].value,
-              vazaoMensal: parseFloat(inputs[1].value),
-            };
-          });
-
-          const metodo = id ? "PUT" : "POST";
-          const url = id ? `/interferencias/${id}` : "/interferencias";
-
-          await fetch(url, {
-            method: metodo,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              descricao,
-              latitude,
-              longitude,
-              finalidades,
-            }),
-          });
-
-          cancelarEdicao();
-          carregarInterferencias();
-        });
-
-      async function editarInterferencia(id) {
-        const resposta = await fetch(`/interferencias/${id}`);
-        const dados = await resposta.json();
-
-        document.getElementById("id").value = dados.id;
-        document.getElementById("descricao").value = dados.descricao;
-        document.getElementById("latitude").value = dados.latitude;
-        document.getElementById("longitude").value = dados.longitude;
-
-        const container = document.getElementById("finalidadesContainer");
-        container.innerHTML = "";
-        if (dados.finalidades) {
-          dados.finalidades.forEach((f) =>
-            adicionarFinalidade(f.nome, f.vazaoMensal)
-          );
-        }
-      }
-
-      async function excluirInterferencia(id) {
-        if (confirm("Tem certeza que deseja excluir esta interferência?")) {
-          await fetch(`/interferencias/${id}`, { method: "DELETE" });
-          carregarInterferencias();
-        }
-      }
-
-      function cancelarEdicao() {
-        document.getElementById("id").value = "";
-        document.getElementById("formInterferencia").reset();
-        document.getElementById("finalidadesContainer").innerHTML = "";
-      }
-
-      carregarInterferencias();
-
-      const toggle = document.getElementById("toggleMode");
-      toggle.addEventListener("change", () => {
-        document.body.classList.toggle("light");
-      });
-    </script>
-  </body>
 </html>

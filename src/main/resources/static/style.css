@@ -1,4 +1,4 @@
-/* Reset básico */
+/* ====== Reset básico ====== */
 * {
   margin: 0;
   padding: 0;
@@ -8,13 +8,23 @@
   text-align: center;
 }
 
-/* Transição suave para todo o body e elementos que mudam de cor */
+/* Transição suave */
 body,
 body * {
   transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
 }
 
-/* Switch - botão de alternância */
+/* Layout container */
+#container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+  width: 95%;
+  margin-bottom: 20px;
+}
+
+/* Switch */
 .switch {
   position: fixed;
   top: 20px;
@@ -32,25 +42,10 @@ body * {
   cursor: pointer;
   background-color: #ccc;
   border-radius: 34px;
-  color:black;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  transition: 0.4s;
-  transition: background-color 0.4s ease;
-}
-
-body.light h1 {
-  color: #000; /* Título escuro para contraste */
-}
-
-body.light * {
-  color: #000; /* Título escuro para contraste   */
-}
-
-body.light table{
-  border-radius: 0;
 }
 
 .slider:before {
@@ -58,35 +53,43 @@ body.light table{
   position: absolute;
   height: 26px;
   width: 26px;
-  left: 4px;  
+  left: 4px;
   bottom: 4px;
-  background-color: white;
+  background: white;
   border-radius: 50%;
-  transition: 0.4s;
-  transition: transform 0.4s ease, background-color 0.4s ease;
+  transition: transform 0.4s ease;
 }
 
-input:checked + .slider {
-  background-color: #2196f3;
+input:checked+.slider {
+  background: #2196f3;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   transform: translateX(26px);
 }
 
-/* Fundo geral */
+/* Fundo e tipografia */
 body {
-  background-color: #000;
+  background: #000;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
 }
 
-/* Título */
 h1 {
-  color: #fff;
+  color: #61dafb;
   margin-bottom: 20px;
+}
+
+h2 {
+  color: #ffd700;
+  margin: 10px 0;
+}
+
+h3 {
+  color: #ccc;
+  margin: 10px 0;
 }
 
 /* Formulário */
@@ -95,13 +98,11 @@ form {
   padding: 20px;
   border-radius: 12px;
   border: 1px solid #1c2a57;
-  width: 50%;
-  min-width: 320px;
-  margin-bottom: 20px;
+  width: 100%;
+  max-width: 600px;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
-/* Inputs e Botões */
 input,
 button {
   padding: 10px 14px;
@@ -110,10 +111,8 @@ button {
   border: none;
   outline: none;
   font-size: 14px;
-  transition: all 0.2s ease-in-out;
 }
 
-/* Inputs */
 input {
   width: 80%;
   max-width: 350px;
@@ -121,62 +120,95 @@ input {
   color: #000;
 }
 
-::placeholder {
-  font-size: 12px;
-  text-transform: uppercase;
-  color: #666;
-}
-
-/* Botões padrão */
 button {
   cursor: pointer;
-  font-weight: 600;
-  background: #ddd;
-  color: #000;
 }
 
-button:hover {
-  background: #bbb;
-  transform: scale(1.05);
-}
-
-/* Botões específicos */
-#btnSalvar {
-  background-color: green;
-  color: white;
-}
-
-#btnSalvar:hover {
-  background-color: darkgreen;
-  transform: scale(1.1);
-}
-
-#btnCancel {
-  background-color: red;
-  color: white;
-}
-
-#btnCancel:hover {
-  background-color: darkred;
-  transform: scale(1.1);
+#containerBusca {
+  display: flex;
 }
 
 #btnLimparBusca {
-  background: #555;
+  color: white;
+  background: #1976d2;
+}
+
+.btnRemoverFinalidade{
   color: white;
 }
 
-#btnLimparBusca:hover {
-  background: #333;
+/* Botões do formulário */
+#btnSalvar {
+  background: green;
+  color: #fff;
+}
+
+#btnSalvar:hover {
+  background: darkgreen;
+  transform: scale(1.05);
+}
+
+#btnCancel {
+  background: red;
+  color: #fff;
+}
+
+#btnCancel:hover {
+  background: darkred;
+  transform: scale(1.05);
+}
+
+#btnAddFinalidade {
+  background: #4b6cb7;
+  color: #fff;
+}
+
+#btnAddFinalidade:hover {
+  background: #385696;
+  transform: scale(1.05);
+}
+
+/* Finalidades dinâmicas */
+.finalidade-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.finalidade-item input {
+  margin-right: 10px;
+  flex: 1;
+  min-width: 80px;
+}
+
+.finalidade-item button {
+  background: crimson;
+  color: #fff;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  border: none;
+  cursor: pointer;
+
+  /* Alinhamento do X */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.finalidade-item button:hover {
+  background: darkred;
 }
 
 /* Tabela */
 table {
-  width: 90%;
+  width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  background-color: #000f3c;
-  overflow: hidden;
+  background: #000f3c;
 }
 
 table th,
@@ -187,47 +219,126 @@ table td {
 }
 
 table th {
-  background-color: #f4f4f4;
+  background: #f4f4f4;
   color: black;
-  font-weight: bold;
 }
 
-/* Botão Excluir com ícone de lixeira */
+table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Botões da tabela */
+.btn-editar {
+  background: #2196f3;
+  color: #fff;
+  border-radius: 6px;
+  padding: 5px 10px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.btn-editar:hover {
+  background: #1976d2;
+  transform: scale(1.05);
+}
+
 .btn-excluir {
   background: none;
   border: none;
   cursor: pointer;
   font-size: 18px;
-  color: white;
-  transition: all 0.2s ease-in-out;
 }
 
-#btn-excluir:hover {
+.btn-excluir:hover {
   background-color: red;
-  transform: scale(1.3);
 }
 
-body.light {
-  background-color: #f9f9f9;
+
+/* Campo de busca */
+#campoBusca {
+  width: 80%;
+  max-width: 400px;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+
+}
+
+#campoBusca::placeholder {
+  font-size: 0.8vw; /* ajuste conforme desejar */
+  color: #999;      /* opcional, para ficar mais discreto */
+}
+
+
+
+
+/* Mapa */
+#map {
+  width: 100%;
+  height: 400px;
+  border: 2px solid #1c2a57;
+  border-radius: 10px;
+}
+
+body.light #map {
+  border: 2px solid #ccc;
+}
+
+body.light *{
   color: #000;
 }
+
+/* Modo claro */
+body.light {
+  background: #f9f9f9;
+  color: #000;
+}
+
+body.light .btn-editar {
+  color: white;
+}
+
 
 body.light form {
   background: #fff;
   border: 1px solid #ccc;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
 body.light input {
   background: #f1f1f1;
   color: #000;
+  border: 1px solid #ccc;
 }
 
 body.light table {
-  background-color: #fff;
+  background-color: white;
 }
 
 body.light table th {
-  background-color: #ddd;
+  color: #000;
 }
 
+body.light table tbody tr:hover {
+  background: #f1f1f1;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+  #container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .finalidade-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
